@@ -19,11 +19,33 @@ set sexy(trig) "!"
 
 set sexy(tflag) "-|-"
 
+##################
+#Set X Time between usage of Command
+
+set sexy(time) "60"
+
 ########################
 # End Of Configuration #
 #################################################################################################################################################################
 bind pub $sexy(tflag) $sexy(trig)jizz sexy:jizz
 
+proc throttled {id seconds} {
+   global throttle
+   if {[info exists throttle($id)]&&$throttle($id)>[clock seconds]} {
+      set id 1
+   } {
+      set throttle($id) [expr {[clock seconds]+$seconds}]
+      set id 0
+   }
+}
+bind time - ?0* throttledCleanup
+proc throttledCleanup args {
+   global throttle
+   set now [clock seconds]
+   foreach {id time} [array get throttle] {
+      if {$time<=$now} {unset throttle($id)}
+   }
+}
 set var2939 0
 set var3492 0
 
@@ -49,7 +71,10 @@ set sayitnow2 {
 	"CUMMMS!!!! and SQUIRTS %squirts times, giving %nick a creampie"
 }
 proc sexy:jizz {nick host hand chan text} {
-	global sayitnow var2939 sayitnow2 var3492
+	global sayitnow var2939 sayitnow2 var3492 sexy
+    if {[throttled $host,$chan $sexy(time)]} {
+    return 
+   }
     set nicks [chanlist $chan]
     set randnick [lindex $nicks [rand [llength $nicks]]]
 	set squirts [rand 10]
@@ -64,6 +89,6 @@ proc sexy:jizz {nick host hand chan text} {
 	puthelp "PRIVMSG $chan :\001ACTION $line\001"
 	puthelp "PRIVMSG $chan :\001ACTION $line2\001"
 	puthelp "PRIVMSG $chan :I have cummed $var2939 times with $var3492 squirts"
+  }
  }
-}
 #################################################################################################################################################################
