@@ -1,4 +1,4 @@
-#####a#######################################
+#############################################
 # Sexy.tcl 0.1                    #30/01/21 #
 #############################################
 #Author  ComputerTech                       #
@@ -18,11 +18,6 @@ set sexy(trig) "!"
 #Set Flag of usage of commands
 
 set sexy(tflag) "-|-"
-
-##################
-#Set X Time between usage of Command
-
-set sexy(time) "60"
 
 ########################
 # End Of Configuration #
@@ -71,8 +66,8 @@ set sayitnow2 {
 	"CUMMMS!!!! and SQUIRTS %squirts times, giving %nick a creampie"
 }
 proc sexy:jizz {nick host hand chan text} {
-	global sayitnow var2939 sayitnow2 var3492 sexy
-    if {[throttled $host,$chan $sexy(time)]} {
+	global sayitnow var2939 sayitnow2 var3492
+    if {[throttled $host,$chan 60]} {
     return 
    }
     set nicks [chanlist $chan]
